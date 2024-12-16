@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Providers;
+namespace Barn2App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
