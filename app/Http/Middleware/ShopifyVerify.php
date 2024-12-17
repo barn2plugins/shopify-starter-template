@@ -5,6 +5,7 @@ namespace Barn2App\Http\Middleware;
 use Barn2App\Actions\Hmac;
 use Barn2App\Exceptions\HttpException;
 use Barn2App\Exceptions\SignatureVerificationException;
+use Barn2App\Models\User;
 use Barn2App\Services\ShopifyAuthService;
 use Barn2App\Services\ShopService;
 use Closure;
@@ -62,6 +63,14 @@ class ShopifyVerify
             return $next($request);
         }
 
+        $shop = $this->getInstalledShop($request);
+        $storeResult = ! $this->isApiRequest($request) && $shop;
+        if ($storeResult) {
+            $this->shopifyAuth->loginFromShop($shop);
+
+            return $next($request);
+        }
+
         $token = $this->getAccessTokenFromRequest($request);
 
         if ($token === null) {
@@ -89,7 +98,19 @@ class ShopifyVerify
      */
     protected function getAccessTokenFromRequest(Request $request): ?string
     {
-        return $request->get('token');
+        return $this->isApiRequest($request)
+            ? $request->bearerToken()
+            : $request->get('token');
+    }
+
+    /**
+     * Determine if the request is AJAX or expects JSON.
+     *
+     * @param  Request  $request  The request object.
+     */
+    protected function isApiRequest(Request $request): bool
+    {
+        return $request->ajax() || $request->expectsJson();
     }
 
     /**
@@ -100,6 +121,16 @@ class ShopifyVerify
     protected function shopExists(Request $request): bool
     {
         return $this->shopService->checkPreviousInstallation($request);
+    }
+
+    /**
+     * Check if there is a store record in the database.
+     *
+     * @param  Request  $request  The request object.
+     */
+    protected function getInstalledShop(Request $request): ?User
+    {
+        return $this->shopService->getShopIfAlreadyInstalled($request);
     }
 
     /**

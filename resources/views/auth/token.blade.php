@@ -47,7 +47,6 @@
                 }
 
                 shopify.idToken().then((token) => {
-
                     let url = new URL(`{!! $target !!}`, window.location.origin);
                     // Enforce HTTPS if the current page is using HTTPS
                     if (window.location.protocol === 'https:') {
@@ -56,6 +55,8 @@
 
                     url.searchParams.set('token', token);
                     url.searchParams.set('host', host);
+
+                    localStorage.setItem('barn2AppToken', token);
 
                     open(url.toString(), "_self");
                     history.pushState(null, '', url.toString());

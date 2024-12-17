@@ -1,5 +1,6 @@
 <?php
 
+use Barn2App\Http\Middleware\HandleInertiaRequests;
 use Barn2App\Http\Middleware\ShopifyVerify;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -12,7 +13,9 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        $middleware->alias([
+        $middleware->web(append: [
+            HandleInertiaRequests::class,
+        ])->alias([
             'shopify.verify' => ShopifyVerify::class,
         ]);
     })

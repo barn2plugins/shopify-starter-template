@@ -1,5 +1,5 @@
 <script>
-    var SESSION_TOKEN_REFRESH_INTERVAL = {{ config('shopify-app.session_token_refresh_interval') }};
+    var SESSION_TOKEN_REFRESH_INTERVAL = {{ config('shopify.session_token_refresh_interval') }};
     var LOAD_EVENT = 'DOMContentLoaded'
 
     document.addEventListener(LOAD_EVENT, () => {

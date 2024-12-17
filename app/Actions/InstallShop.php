@@ -57,7 +57,7 @@ class InstallShop
     {
         $shopDomain = $this->shopService->getShopDomain($this->request);
         $code = $this->request->get('code');
-        
+
         $url = "https://{$shopDomain}/admin/oauth/access_token";
 
         $params = [

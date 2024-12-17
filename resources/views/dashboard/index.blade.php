@@ -2,6 +2,8 @@
 
 @section('content')
     <h1>Shop installed</h1>
+
+    <div id="hello-react"></div>
 @endsection
 
 @section('scripts')

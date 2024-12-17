@@ -1,0 +1,2 @@
+name = "Barn2 Starter App"
+scopes = "read_products,write_products,write_script_tags"

@@ -45,7 +45,7 @@ return [
     */
 
     'api_scopes' => env('SHOPIFY_API_SCOPES', 'read_products,write_products,read_themes,write_script_tags'),
-    
+
     /*
     |--------------------------------------------------------------------------
     | Session token refresh

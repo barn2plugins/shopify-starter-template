@@ -1,11 +1,43 @@
 import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
+import react from '@vitejs/plugin-react';
 
 export default defineConfig({
     plugins: [
         laravel({
-            input: ['resources/css/app.css', 'resources/js/app.js'],
+            input: [
+                'resources/css/app.css',
+                'resources/js/app.jsx'
+            ],
             refresh: true,
         }),
+        react(),
     ],
+    server: {
+        // Ensure proper HMR for Laravel development
+        hmr: {
+            host: 'localhost',
+        },
+        // Configure for HTTPS if needed
+        https: true,
+    },
+    optimizeDeps: {
+        include: ['@inertiajs/inertia', '@inertiajs/inertia-react', '@shopify/polaris', '@shopify/app-bridge-react'],
+    },
+    resolve: {
+        alias: {
+            '@shopify/polaris': '@shopify/polaris',
+        },
+    },
+    build: {
+        // Ensure proper chunk sizing
+        chunkSizeWarningLimit: 1000,
+        rollupOptions: {
+            output: {
+                manualChunks: {
+                    vendor: ['react', 'react-dom'],
+                },
+            },
+        },
+    },
 });

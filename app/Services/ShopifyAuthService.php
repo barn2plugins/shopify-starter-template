@@ -116,6 +116,22 @@ class ShopifyAuthService
     }
 
     /**
+     * Login the user usiing authenticated shop
+     *
+     * @return bool
+     */
+    public function loginFromShop(User $shop)
+    {
+        if (! $shop) {
+            return false;
+        }
+
+        $this->auth->login($shop);
+
+        return true;
+    }
+
+    /**
      * Redirect to install route.
      */
     public function installRedirect(): RedirectResponse

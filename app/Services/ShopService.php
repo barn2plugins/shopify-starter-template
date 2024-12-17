@@ -45,6 +45,22 @@ class ShopService
     }
 
     /**
+     * Check if there is a store record in the database.
+     *
+     * @param  Request  $request  The request object.
+     */
+    public function getShopIfAlreadyInstalled(Request $request): ?User
+    {
+        if (request()->user()) {
+            $shop = request()->user();
+        } else {
+            $shop = $this->getShopFromRequest($request);
+        }
+
+        return $shop && $shop->password && ! $shop->trashed() ? $shop : null;
+    }
+
+    /**
      * Get shop data from request
      *
      * @return mixed
@@ -53,7 +69,7 @@ class ShopService
      */
     public function getShopFromRequest(Request $request)
     {
-        $shopDomain = $request->query('shop');
+        $shopDomain = $this->getShopDomain($request);
         if (! $shopDomain || ! filter_var("https://$shopDomain", FILTER_VALIDATE_URL)) {
             throw new InvalidShopDomainException('Shop domain invalid');
         }
