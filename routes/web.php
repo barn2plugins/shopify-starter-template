@@ -2,6 +2,9 @@
 
 use Barn2App\Http\Controllers\AuthController;
 use Barn2App\Http\Controllers\DashboardController;
+use Barn2App\Http\Controllers\ProductsController;
+use Barn2App\Http\Controllers\SampleController;
+use Barn2App\Http\Middleware\ShopifyVerify;
 use Illuminate\Support\Facades\Route;
 
 // Authentication routes
@@ -11,6 +14,12 @@ Route::group(['prefix' => 'authenticate'], function () {
 });
 
 // App routes
-Route::get('/', [DashboardController::class, 'index'])->middleware('shopify.verify')->name('home');
-Route::get('/products', [DashboardController::class, 'products'])->name('products');
-Route::get('/sample', [DashboardController::class, 'sample'])->name('sample');
+Route::middleware([ShopifyVerify::class])->group(function () {
+    Route::get('/', [DashboardController::class, 'index'])->name('home');
+
+    Route::get('/products', [ProductsController::class, 'index'])->name('products');
+    Route::get('/products/get', [ProductsController::class, 'get'])->name('products.get');
+    Route::post('/products/create', [ProductsController::class, 'create'])->name('products.create');
+
+    Route::get('/sample', [SampleController::class, 'index'])->name('sample');
+});

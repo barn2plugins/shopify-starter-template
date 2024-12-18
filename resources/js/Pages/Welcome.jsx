@@ -1,17 +1,38 @@
-import React from 'react';
-import { Head } from '@inertiajs/react';
+import React, { useState } from 'react';
 import { EmptyState } from '@shopify/polaris';
+import axios from 'axios';
 
 const Welcome = () => {
+    const [ loading, setLoading ] = useState(false);
+
+    const handleCreateProduct = (e) => {
+        e.preventDefault();
+        setLoading(true);
+
+        try {
+            const response = axios.post('/products/create');
+        } catch {
+
+        } finally {
+            setLoading(false);
+            shopify.toast.show(
+                'Product "Sample Product" has been created', 
+                {
+                    duration: 3000
+                }
+            )
+        }
+    }
+
     return (
         <>
-            <Head title="Welcome" />
             <div className="bg-white rounded-lg shadow mx-auto flex justify-center max-w-lg">
                 <EmptyState
                     heading="Manage your products"
                     action={{
                         content: 'Create a product',
-                        url: 'https://help.shopify.com',
+                        loading,
+                        onAction: handleCreateProduct
                     }}
                     secondaryAction={{
                         content: 'View all products',

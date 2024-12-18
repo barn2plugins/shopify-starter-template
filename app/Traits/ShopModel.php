@@ -12,4 +12,9 @@ trait ShopModel
     {
         return $this->name;
     }
+
+    public function getAccessToken()
+    {
+        return $this->password;
+    }
 }

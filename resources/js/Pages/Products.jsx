@@ -1,105 +1,112 @@
-import React, { useState, useCallback } from 'react';
-import { Head } from '@inertiajs/react';
+import React, { useState, useEffect, useCallback } from 'react';
+import axios from 'axios';
+import SkeletonProduct from '../Skeleton/SkeletonProduct';
 import {
   Page,
   Card,
   ResourceList,
   ResourceItem,
   Text,
-  Filters,
-  Pagination,
   Thumbnail,
+  Badge
 } from '@shopify/polaris';
 
-const products = [
-  {
-    id: '1',
-    url: '/products/1',
-    title: 'Red Shirt',
-    vendor: 'Fashion Hub',
-    image: 'https://via.placeholder.com/60',
-  },
-  {
-    id: '2',
-    url: '/products/2',
-    title: 'Blue Jeans',
-    vendor: 'Denim Store',
-    image: 'https://via.placeholder.com/60',
-  },
-  {
-    id: '3',
-    url: '/products/3',
-    title: 'Sneakers',
-    vendor: 'Shoe Shop',
-    image: 'https://via.placeholder.com/60',
-  },
-];
-
 const Products = () => {
-  const [queryValue, setQueryValue] = useState('');
+  const [products, setProducts] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
+  const fetchData = async () => {
+    try {
+      const response = await axios.get('/products/get');
+      if ( response.status === 200 ) {
+        setProducts(response.data.products);
+      }
+    } catch (error) {
+        console.error('Error:', error.response ? error.response.data : error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const resourceName = {
+    singular: 'product',
+    plural: 'products'
+  };
+  
   // Filter handling
-  const handleQueryChange = useCallback((value) => setQueryValue(value), []);
-  const handleQueryClear = useCallback(() => setQueryValue(''), []);
-  const handleSelectionChange = useCallback((items) => setSelectedItems(items), []);
+  const handleSelectionChange = useCallback((products) => setSelectedItems(products), []);
+ 
+  const promotedBulkActions = [
+    {
+      content: 'Edit products',
+      onAction: () => console.log('Todo: implement bulk edit'),
+    },
+  ];
 
-  // Pagination (dummy handlers)
-  const handlePreviousPage = useCallback(() => console.log('Previous Page'), []);
-  const handleNextPage = useCallback(() => console.log('Next Page'), []);
+  const bulkActions = [
+    {
+      content: 'Add tags',
+      onAction: () => console.log('Todo: implement bulk add tags'),
+    },
+    {
+      content: 'Remove tags',
+      onAction: () => console.log('Todo: implement bulk remove tags'),
+    },
+    {
+      content: 'Delete products',
+      onAction: () => console.log('Todo: implement bulk delete'),
+    },
+  ];
 
   return (
-    <Page title="Products" primaryAction={{ content: 'Add Product' }}>
-      <Card>
-        <ResourceList
-          resourceName={{ singular: 'product', plural: 'products' }}
-          items={products}
-          renderItem={(item) => {
-            const { id, title, vendor, image, url } = item;
-            const media = <Thumbnail source={image} alt={title} />;
-
-            return (
-              <ResourceItem id={id} media={media} accessibilityLabel={`View details for ${title}`} url={url}>
-                <h3>
-                  <Text variation="strong">{title}</Text>
-                </h3>
-                <div>{vendor}</div>
-              </ResourceItem>
-            );
-          }}
-          selectedItems={selectedItems}
-          onSelectionChange={handleSelectionChange}
-          selectable
-          filterControl={
-            <Filters
-              queryValue={queryValue}
-              onQueryChange={handleQueryChange}
-              onQueryClear={handleQueryClear}
-              filters={[
-                {
-                  key: 'vendor',
-                  label: 'Vendor',
-                  filter: (
-                    <div>
-                      <p>Custom Vendor Filter UI Here</p>
-                    </div>
-                  ),
-                },
-              ]}
+    <>
+      { isLoading && <SkeletonProduct /> }
+      { !isLoading && 
+        <Page title="Products">
+          <Card>
+            <ResourceList
+              resourceName={resourceName}
+              items={products}
+              renderItem={renderItem}
+              selectedItems={selectedItems}
+              onSelectionChange={handleSelectionChange}
+              selectable
+              loading={isLoading}
+              promotedBulkActions={promotedBulkActions}
+              bulkActions={bulkActions}
+              resolveItemId={resolveItemIds}
             />
-          }
-          loading={isLoading}
-        />
-      </Card>
-      <Pagination
-        hasPrevious
-        onPrevious={handlePreviousPage}
-        hasNext
-        onNext={handleNextPage}
-      />
-    </Page>
+          </Card>
+        </Page>
+      }
+    </>
   );
+
+  function renderItem(item) {
+    const { id, title, featuredMedia, url, status } = item.node;
+    const media = <Thumbnail source={featuredMedia.preview.image.url} alt={featuredMedia.preview.image.altText} />;
+    return (
+      <ResourceItem id={id} media={media} accessibilityLabel={`View details for ${title}`} url={url}>
+        <h3>
+          <Text variation="strong">{title}</Text>
+        </h3>
+        <div className='mt-1'>
+          { status === 'ACTIVE' &&  <Badge tone="success">{status}</Badge>}
+          { status === 'ARCHIVED' &&  <Badge tone="info">{status}</Badge>}
+          { status === 'DRAFT' &&  <Badge>{status}</Badge>}
+        </div>
+      </ResourceItem>
+    );
+  }
+
+  function resolveItemIds({id}) {
+    return id;
+  }
 };
 
 export default Products;

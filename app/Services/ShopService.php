@@ -100,4 +100,19 @@ class ShopService
 
         return $shopDomain;
     }
+
+    /**
+     * Retrieve the Shopify shop domain from the request.
+     *
+     * @param  \Illuminate\Http\Request  $request  The incoming HTTP request instance.
+     * @return string|null The Shopify shop domain, or null if not found.
+     */
+    public function getAccessToken(Request $request)
+    {
+        if ($request->user()) {
+            return $request->user()->getAccessToken();
+        }
+
+        return false;
+    }
 }

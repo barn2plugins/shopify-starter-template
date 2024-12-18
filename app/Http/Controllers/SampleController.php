@@ -4,10 +4,10 @@ namespace Barn2App\Http\Controllers;
 
 use Inertia\Inertia;
 
-class DashboardController extends Controller
+class SampleController extends Controller
 {
     public function index()
     {
-        return Inertia::render('Welcome');
+        return Inertia::render('Sample');
     }
 }
