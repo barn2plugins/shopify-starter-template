@@ -1,6 +1,7 @@
 <?php
 
 use Barn2App\Http\Middleware\HandleInertiaRequests;
+use Barn2App\Http\Middleware\IframeProtection;
 use Barn2App\Http\Middleware\ShopifyVerify;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -15,6 +16,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->web(append: [
             HandleInertiaRequests::class,
+            IframeProtection::class,
         ])->alias([
             'shopify.verify' => ShopifyVerify::class,
         ]);
