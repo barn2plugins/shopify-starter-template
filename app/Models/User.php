@@ -47,4 +47,14 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
         ];
     }
+
+    /**
+     * Get the subscriptions for the user
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function subscriptions()
+    {
+        return $this->hasMany(Subscription::class);
+    }
 }

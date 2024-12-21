@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
-import SkeletonProduct from '../Skeleton/SkeletonProduct';
+import SkeletonProducts from '../Skeleton/SkeletonProducts';
 import {
   Page,
   Card,
@@ -19,6 +19,8 @@ const Products = () => {
   const fetchData = async () => {
     try {
       const response = await axios.get('/products/get');
+      console.log(response);
+      
       if ( response.status === 200 ) {
         setProducts(response.data.products);
       }
@@ -65,10 +67,10 @@ const Products = () => {
 
   return (
     <>
-      { isLoading && <SkeletonProduct /> }
+      { isLoading && <SkeletonProducts /> }
       { !isLoading && 
         <Page title="Products">
-          <Card>
+          <Card roundedAbove="sm">
             <ResourceList
               resourceName={resourceName}
               items={products}

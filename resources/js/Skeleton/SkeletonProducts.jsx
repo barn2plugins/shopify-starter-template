@@ -8,7 +8,7 @@ import {
     SkeletonBodyText,
 } from '@shopify/polaris';
 
-const SkeletonProduct = () => {
+const SkeletonProducts = () => {
     return (
         <SkeletonPage title="Products">
             <Layout>
@@ -24,4 +24,4 @@ const SkeletonProduct = () => {
         </SkeletonPage>
     );
 };
-export default SkeletonProduct;
+export default SkeletonProducts;

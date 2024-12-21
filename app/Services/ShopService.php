@@ -14,10 +14,14 @@ class ShopService
      * @param  string  $shopDomain
      * @return mixed
      */
-    public function getShop($shopDomain)
+    public function getShop($shopDomain = null)
     {
         if (request()->user()) {
             return request()->user();
+        }
+
+        if ($shopDomain === null) {
+            $shopDomain = $this->getShopDomain(request());
         }
 
         $shop = User::where(['name' => $shopDomain])->first();

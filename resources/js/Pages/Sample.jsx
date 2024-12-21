@@ -1,12 +1,10 @@
 import React from 'react';
-import { Head } from '@inertiajs/react';
 import { Card, Text, Box } from '@shopify/polaris'
 
 const Sample = () => {
     return (
         <>
-            <Head title="Sample" />
-            <div>
+            <div className='w-5/12 mx-auto'>
                 <Card roundedAbove="sm">
                     <Text as="h2" variant="headingSm">
                         Sample Page

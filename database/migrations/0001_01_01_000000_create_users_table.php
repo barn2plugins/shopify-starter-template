@@ -17,8 +17,6 @@ return new class extends Migration
             $table->string('email')->unique()->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password')->nullable();
-            $table->string('plan')->nullable();
-            $table->boolean('is_active')->nullable();
             $table->rememberToken();
             $table->softDeletes();
             $table->timestamps();

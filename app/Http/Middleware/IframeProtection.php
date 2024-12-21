@@ -5,12 +5,11 @@ namespace Barn2App\Http\Middleware;
 use Barn2App\Services\ShopService;
 use Closure;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Cache;
+use Symfony\Component\HttpFoundation\Response;
 
 class IframeProtection
 {
-
     /**
      * Handle an incoming request.
      *
@@ -19,9 +18,7 @@ class IframeProtection
     public function handle(Request $request, Closure $next): Response
     {
         $response = $next($request);
-        $shopService = new ShopService();
-
-        $shop = $shopService->getShopFromRequest($request);
+        $shop = (new ShopService)->getShopFromRequest($request);
 
         $shop = Cache::remember(
             'frame-ancestors_'.$shop['name'],
@@ -41,7 +38,7 @@ class IframeProtection
             'Content-Security-Policy',
             $iframeAncestors
         );
-        
+
         return $response;
     }
 }

@@ -1,6 +1,7 @@
 import React from 'react';
 import { NavMenu } from '@shopify/app-bridge-react';
 import {Text} from '@shopify/polaris';
+import DevelopmentStoreNotice from './Components/DevelopmentStoreNotice';
 
 export default function Layout({ children }) {
     return (
@@ -10,10 +11,12 @@ export default function Layout({ children }) {
                     Home
                 </a>
                 <a href="/products">Products</a>
+                <a href="/plans">Plans</a>
                 <a href="/sample">Sample</a>
             </NavMenu>
             <div className='barn2-app-wrapper'>
-                <div className="relative mx-auto w-5/12 p-6 lg:p-8">
+                <DevelopmentStoreNotice></DevelopmentStoreNotice>
+                <div className="relative mx-auto p-6 lg:p-8">
                     <div className='text-center mb-20'>
                         <Text variant="heading3xl" as="h2">
                             Shopify Starter Template

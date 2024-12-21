@@ -5,22 +5,25 @@ import axios from 'axios';
 const Welcome = () => {
     const [ loading, setLoading ] = useState(false);
 
-    const handleCreateProduct = (e) => {
+    const handleCreateProduct = async (e) => {
         e.preventDefault();
         setLoading(true);
 
         try {
-            const response = axios.post('/products/create');
+            const response = await axios.post('/products/create');
+            if (  response.status === 200 ) {
+                setLoading(false);
+                shopify.toast.show(
+                    'Product "Sample Product" has been created', 
+                    {
+                        duration: 3000
+                    }
+                )
+            }
         } catch {
 
         } finally {
-            setLoading(false);
-            shopify.toast.show(
-                'Product "Sample Product" has been created', 
-                {
-                    duration: 3000
-                }
-            )
+            
         }
     }
 
