@@ -1,9 +1,10 @@
 import React from 'react';
 import { Card, Text, Box } from '@shopify/polaris'
+import Layout from '../Layout';
 
 const Sample = () => {
     return (
-        <>
+        <Layout>
             <div className='w-5/12 mx-auto'>
                 <Card roundedAbove="sm">
                     <Text as="h2" variant="headingSm">
@@ -19,7 +20,7 @@ const Sample = () => {
                     </Box>
                 </Card>
             </div>
-        </>
+        </Layout>
     );
 }
 

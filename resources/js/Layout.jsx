@@ -2,8 +2,11 @@ import React from 'react';
 import { NavMenu } from '@shopify/app-bridge-react';
 import {Text} from '@shopify/polaris';
 import DevelopmentStoreNotice from './Components/DevelopmentStoreNotice';
+import { usePage } from '@inertiajs/react'
 
 export default function Layout({ children }) {
+    const { isStoreActive } = usePage().props;
+
     return (
         <>
             <NavMenu>
@@ -15,7 +18,7 @@ export default function Layout({ children }) {
                 <a href="/sample">Sample</a>
             </NavMenu>
             <div className='barn2-app-wrapper'>
-                <DevelopmentStoreNotice></DevelopmentStoreNotice>
+                { !isStoreActive ? <DevelopmentStoreNotice /> : null }
                 <div className="relative mx-auto p-6 lg:p-8">
                     <div className='text-center mb-20'>
                         <Text variant="heading3xl" as="h2">

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import axios from 'axios';
 import SkeletonProducts from '../Skeleton/SkeletonProducts';
+import axios from 'axios';
+import Layout from '../Layout';
 import {
   Page,
   Card,
@@ -66,7 +67,7 @@ const Products = () => {
   ];
 
   return (
-    <>
+    <Layout>
       { isLoading && <SkeletonProducts /> }
       { !isLoading && 
         <Page title="Products">
@@ -86,7 +87,7 @@ const Products = () => {
           </Card>
         </Page>
       }
-    </>
+    </Layout>
   );
 
   function renderItem(item) {

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { EmptyState } from '@shopify/polaris';
 import axios from 'axios';
+import Layout from '../Layout';
 
 const Welcome = () => {
     const [ loading, setLoading ] = useState(false);
@@ -28,7 +29,7 @@ const Welcome = () => {
     }
 
     return (
-        <>
+        <Layout>
             <div className="bg-white rounded-lg shadow mx-auto flex justify-center max-w-lg">
                 <EmptyState
                     heading="Manage your products"
@@ -46,7 +47,7 @@ const Welcome = () => {
                     <p>This starter templates provides a products page where it retrieves all the products from your shop using GraphQL and you can create a random product as well by clicking on the create button.</p>
                 </EmptyState>
             </div>
-        </>
+        </Layout>
     );
 }
 

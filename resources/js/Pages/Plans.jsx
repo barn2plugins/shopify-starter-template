@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import SkeletonPlans from '../Skeleton/SkeletonPlans';
 import axios from 'axios';
 import Plans from '../Components/Plans';
+import Layout from '../Layout';
 
 const Sample = () => {
     const [loading, setLoading] = useState(true);
@@ -25,10 +26,10 @@ const Sample = () => {
     }, []);
 
     return (
-        <>
+        <Layout>
             { loading && <SkeletonPlans /> }
             { !loading && <Plans page={pageContent} /> }
-        </>
+        </Layout>
     );
 }
 

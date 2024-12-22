@@ -1,6 +1,5 @@
 import './bootstrap';
 import AppBridgeProvider from './AppBridgeProvider';
-import Layout from './Layout';
 import { createInertiaApp } from '@inertiajs/react'
 import { createRoot } from 'react-dom/client'
 import React from 'react';
@@ -13,9 +12,7 @@ createInertiaApp({
   setup({ el, App, props }) {
       createRoot(el).render(
           <AppBridgeProvider>
-              <Layout>
-                  <App {...props} />
-              </Layout>
+            <App {...props} />
           </AppBridgeProvider>
       );
   },
