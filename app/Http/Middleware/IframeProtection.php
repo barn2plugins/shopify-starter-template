@@ -20,6 +20,10 @@ class IframeProtection
         $response = $next($request);
         $shop = (new ShopService)->getShopFromRequest($request);
 
+        if ($shop === null) {
+            return $response;
+        }
+
         $shop = Cache::remember(
             'frame-ancestors_'.$shop['name'],
             now()->addMinutes(20),

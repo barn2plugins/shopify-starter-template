@@ -59,7 +59,7 @@ class SubscriptionController extends Controller
 
         $url = "/recurring_application_charges/{$chargeId}.json";
 
-        $response = $this->restAPI->request($url);
+        $response = $this->restAPI->get($url);
 
         if ($response === false) {
             return redirect()->route('home');

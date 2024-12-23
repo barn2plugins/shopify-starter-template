@@ -52,12 +52,12 @@ class ShopifyRestService
     }
 
     /**
-     * Create or update the subscription
+     * Make a GET request to the Shopify REST API
      *
      * @param  mixed  $url
      * @return RedirectResponse|JsonResponse
      */
-    public function request($url)
+    public function get($url)
     {
         try {
             $response = Http::withHeaders([
@@ -68,15 +68,32 @@ class ShopifyRestService
                 return false;
             }
 
-            $chargeDetails = $response->json();
+            return $response->json();
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'error' => $e->getMessage()]);
+        }
+    }
 
-            if (empty($chargeDetails['recurring_application_charge'])) {
+    /**
+     * Make a POST request to the Shopify REST API
+     *
+     * @param  mixed  $url
+     * @return RedirectResponse|JsonResponse
+     */
+    public function post($url, $data)
+    {
+        try {
+            $response = Http::withHeaders([
+                'X-Shopify-Access-Token' => $this->accessToken,
+            ])->post($this->rest_url.$url, $data);
+
+            if ($response->failed()) {
                 return false;
             }
 
-            return $chargeDetails;
+            return $response->json();
         } catch (\Exception $e) {
-            return response()->json(['success' => false, 'error' => $e->getMessage()]);
+            return false;
         }
     }
 }

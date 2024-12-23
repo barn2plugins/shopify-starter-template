@@ -6,6 +6,7 @@ use Barn2App\Http\Controllers\PlansController;
 use Barn2App\Http\Controllers\ProductsController;
 use Barn2App\Http\Controllers\SampleController;
 use Barn2App\Http\Controllers\SubscriptionController;
+use Barn2App\Http\Controllers\WebhookController;
 use Barn2App\Http\Middleware\ShopifyVerify;
 use Illuminate\Support\Facades\Route;
 
@@ -13,6 +14,14 @@ use Illuminate\Support\Facades\Route;
 Route::group(['prefix' => 'authenticate'], function () {
     Route::get('/', [AuthController::class, 'authenticate'])->name('authenticate');
     Route::get('/token', [AuthController::class, 'token'])->name('authenticate.token');
+});
+
+// Shopify webhook routes
+Route::group(['prefix' => 'webhook'], function () {
+    Route::post('/uninstalled', [WebhookController::class, 'uninstalled'])->name('webhook.app.uninstalled');
+    Route::post('/customers/data_request', [WebhookController::class, 'customersDataRequest'])->name('webhook.customers.data_request');
+    Route::post('/customers/redact', [WebhookController::class, 'customersRedact'])->name('webhook.customers.redact');
+    Route::post('/shop/redact', [WebhookController::class, 'shopRedact'])->name('webhook.shop.redact');
 });
 
 // App routes
@@ -27,6 +36,7 @@ Route::middleware([ShopifyVerify::class])->group(function () {
 
     Route::get('/plans', [PlansController::class, 'index'])->name('plans');
     Route::get('/plans/content', [PlansController::class, 'content'])->name('plans.content');
+
     // Create a subscription charge and redirect to Shopify's charge approval page
     Route::post('/plans/subscription', [PlansController::class, 'create'])->name('plans.create');
 

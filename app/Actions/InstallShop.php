@@ -33,6 +33,11 @@ class InstallShop
         return $shop;
     }
 
+    /**
+     * Create a new shop or restore a soft-deleted shop.
+     *
+     * @return \App\Models\User
+     */
     public function createOrRestore()
     {
         // Get the shop domain
@@ -53,6 +58,11 @@ class InstallShop
         return $shop;
     }
 
+    /**
+     * Get the access token from Shopify.
+     *
+     * @return string|bool
+     */
     public function getAccessToken()
     {
         $shopDomain = $this->shopService->getShopDomain($this->request);

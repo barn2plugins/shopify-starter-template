@@ -139,8 +139,8 @@ const Plans = ({page}) => {
                                         loading={btnLoading && index === pressedButtonIndex}
                                         onClick={() => handleChoosePlan(plan.name, index)}
                                         >
-                                            { page.current_plan === plan.name && page.billing_interval === billingPeriod && <span>Current plan</span>}
-                                            { page.current_plan !== plan.name && page.billing_interval !== billingPeriod && <span>Choose plan</span>}
+                                            { page.current_plan === plan.name && <span>Current plan</span>}
+                                            { page.current_plan !== plan.name && <span>Choose plan</span>}
                                     </Button>
                                 </BlockStack>
                             </Card>

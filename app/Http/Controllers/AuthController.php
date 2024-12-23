@@ -4,6 +4,7 @@ namespace Barn2App\Http\Controllers;
 
 use Barn2App\Actions\InstallShop;
 use Barn2App\Exceptions\MissingShopDomainException;
+use Barn2App\Services\ShopifyWebhookService;
 use Barn2App\Services\ShopService;
 use Barn2App\Utils\Util;
 use Illuminate\Http\Request;
@@ -17,7 +18,14 @@ class AuthController extends Controller
      *
      * @var \App\Services\ShopService
      */
-    public $shopService;
+    private $shopService;
+
+    /**
+     * Service to handle operations related to Shopify webhooks.
+     *
+     * @var \App\Services\ShopifyWebhookService
+     */
+    private $webhookService;
 
     /**
      * Constructor to initialize the shop service.
@@ -29,9 +37,11 @@ class AuthController extends Controller
      * @param  \App\Services\ShopService  $shopService  The service instance to handle shop operations.
      */
     public function __construct(
-        ShopService $shopService
+        ShopService $shopService,
+        ShopifyWebhookService $webhookService
     ) {
         $this->shopService = $shopService;
+        $this->webhookService = $webhookService;
     }
 
     public function authenticate(Request $request, InstallShop $installShop)
@@ -54,6 +64,9 @@ class AuthController extends Controller
                 ]
             );
         }
+
+        // Register webhooks with Shopify
+        $this->webhookService->register($shop);
 
         return Redirect::route(
             'home',

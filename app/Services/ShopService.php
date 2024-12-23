@@ -113,10 +113,25 @@ class ShopService
      */
     public function getAccessToken(Request $request)
     {
-        if ($request->user()) {
-            return $request->user()->getAccessToken();
+        if ($shop = $this->getShopIfAlreadyInstalled($request)) {
+            return $shop->getAccessToken();
         }
 
         return false;
+    }
+
+    /**
+     * Delete shop
+     *
+     * @param  mixed  $shop
+     * @return mixed
+     */
+    public function deleteShop($shop = null)
+    {
+        if ($shop === null) {
+            $shop = $this->getShop();
+        }
+
+        return $shop->forceDelete();
     }
 }

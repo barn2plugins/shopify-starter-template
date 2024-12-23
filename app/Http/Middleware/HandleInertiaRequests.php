@@ -38,6 +38,10 @@ class HandleInertiaRequests extends Middleware
         return array_merge(parent::share($request), [
             'isStoreActive' => fn () => $request->user() ? (function () use ($request) {
                 $user = $request->user();
+                if (! $user->subscriptions->count()) {
+                    return false;
+                }
+
                 return $user->subscriptions()->first()->isActive();
             })() : null,
         ]);
