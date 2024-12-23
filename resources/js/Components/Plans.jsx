@@ -45,6 +45,14 @@ const Plans = ({page}) => {
         setBillingPeriod(value);
     }
 
+    const buttonText = (plan) => {
+        if (page.current_plan === plan.name && page.billing_interval === billingPeriod) {
+            return 'Current plan';
+        } else {
+            return 'Choose plan';
+        }
+    }
+
     useEffect(() => {
         if (page.billing_interval) {
             setBillingPeriod(page.billing_interval);
@@ -139,8 +147,7 @@ const Plans = ({page}) => {
                                         loading={btnLoading && index === pressedButtonIndex}
                                         onClick={() => handleChoosePlan(plan.name, index)}
                                         >
-                                            { page.current_plan === plan.name && <span>Current plan</span>}
-                                            { page.current_plan !== plan.name && <span>Choose plan</span>}
+                                            {buttonText(plan)}
                                     </Button>
                                 </BlockStack>
                             </Card>

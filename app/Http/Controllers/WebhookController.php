@@ -32,7 +32,7 @@ class WebhookController extends Controller
      */
     public function __construct(Request $request, ShopService $shopService)
     {
-        $this->request = $request;
+        $this->request     = $request;
         $this->shopService = $shopService;
     }
 
@@ -50,7 +50,7 @@ class WebhookController extends Controller
         }
 
         $shopDomain = $this->request->input('myshopify_domain');
-        $shop = $this->shopService->getShop($shopDomain);
+        $shop       = $this->shopService->getShop($shopDomain);
 
         if (! $shop->exists()) {
             return;
@@ -75,7 +75,7 @@ class WebhookController extends Controller
         }
 
         $shopDomain = $this->request->input('shop_domain');
-        $shop = $this->shopService->getShop($shopDomain);
+        $shop       = $this->shopService->getShop($shopDomain);
 
         // Do the necessary logic here
     }
@@ -96,7 +96,7 @@ class WebhookController extends Controller
         }
 
         $shopDomain = $this->request->input('shop_domain');
-        $shop = $this->shopService->getShop($shopDomain);
+        $shop       = $this->shopService->getShop($shopDomain);
 
         // Do the necessary logic here
     }
@@ -117,7 +117,7 @@ class WebhookController extends Controller
         }
 
         $shopDomain = $this->request->input('shop_domain');
-        $shop = $this->shopService->getShop($shopDomain);
+        $shop       = $this->shopService->getShop($shopDomain);
 
         // Do the necessary logic here
     }

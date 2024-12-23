@@ -63,7 +63,7 @@ class ShopifyVerify
             return $next($request);
         }
 
-        $shop = $this->getInstalledShop($request);
+        $shop        = $this->getInstalledShop($request);
         $storeResult = ! $this->isApiRequest($request) && $shop;
         if ($storeResult) {
             $this->shopifyAuth->loginFromShop($shop);

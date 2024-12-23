@@ -99,9 +99,9 @@ class ShopifyProductService
             'input' => [
                 'metafields' => [
                     'namespace' => 'my_field',
-                    'key' => 'liner_material',
-                    'type' => 'single_line_text_field',
-                    'value' => 'Synthetic Leather',
+                    'key'       => 'liner_material',
+                    'type'      => 'single_line_text_field',
+                    'value'     => 'Synthetic Leather',
                 ],
                 'title' => 'Sample Product',
             ],

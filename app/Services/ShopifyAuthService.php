@@ -45,8 +45,8 @@ class ShopifyAuthService
         Guard $auth
     ) {
         $this->tokenService = $tokenService;
-        $this->shopService = $shopService;
-        $this->auth = $auth;
+        $this->shopService  = $shopService;
+        $this->auth         = $auth;
     }
 
     /**
@@ -62,8 +62,8 @@ class ShopifyAuthService
     public function tokenRedirect(Request $request)
     {
         // At this point the HMAC and other details are verified already, filter it out
-        $path = $request->path();
-        $target = Str::start($path, '/');
+        $path       = $request->path();
+        $target     = Str::start($path, '/');
         $shopDomain = $this->shopService->getShopDomain($request);
 
         if ($request->query()) {
@@ -84,9 +84,9 @@ class ShopifyAuthService
         return Redirect::route(
             'authenticate.token',
             [
-                'shop' => $shopDomain,
+                'shop'   => $shopDomain,
                 'target' => $target,
-                'host' => $request->get('host'),
+                'host'   => $request->get('host'),
                 'locale' => $request->get('locale'),
             ]
         );
@@ -139,8 +139,8 @@ class ShopifyAuthService
         return Redirect::route(
             'authenticate',
             [
-                'shop' => request('shop'),
-                'host' => request('host'),
+                'shop'   => request('shop'),
+                'host'   => request('host'),
                 'locale' => request('locale'),
             ]
         );

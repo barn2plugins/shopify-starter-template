@@ -1,0 +1,14 @@
+{
+    "preset": "laravel",
+    "rules": {
+        "trailing_comma_in_multiline": {
+            "elements": [ "arrays" ]
+        },
+        "array_syntax": {
+            "syntax": "short"
+        },
+        "binary_operator_spaces": {
+            "default": "align_single_space_minimal"
+        }
+    }
+}

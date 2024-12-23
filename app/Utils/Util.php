@@ -17,11 +17,11 @@ class Util
      */
     public static function parseQueryString(string $queryString, ?string $delimiter = null): array
     {
-        $commonSeparator = [';' => '/[;]\s*/', ';,' => '/[;,]\s*/', '&' => '/[&]\s*/'];
+        $commonSeparator  = [';' => '/[;]\s*/', ';,' => '/[;,]\s*/', '&' => '/[&]\s*/'];
         $defaultSeparator = '/[&;]\s*/';
 
         $params = [];
-        $split = preg_split(
+        $split  = preg_split(
             $delimiter ? $commonSeparator[$delimiter] || '/['.$delimiter.']\s*/' : $defaultSeparator,
             $queryString ?? ''
         );
@@ -33,7 +33,7 @@ class Util
 
             [$key, $value] = strpos($part, '=') !== false ? explode('=', $part, 2) : [$part, null];
 
-            $key = urldecode($key);
+            $key   = urldecode($key);
             $value = $value !== null ? urldecode($value) : $value;
 
             if (isset($params[$key])) {

@@ -46,9 +46,9 @@ class ShopifyRestService
         Request $request,
         ShopService $shopService
     ) {
-        $this->shopDomain = $shopService->getShopDomain($request);
+        $this->shopDomain  = $shopService->getShopDomain($request);
         $this->accessToken = $shopService->getAccessToken($request);
-        $this->rest_url = "https://{$this->shopDomain}/admin/api/2024-10";
+        $this->rest_url    = "https://{$this->shopDomain}/admin/api/2024-10";
     }
 
     /**

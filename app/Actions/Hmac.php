@@ -30,7 +30,7 @@ class Hmac
         }
 
         $params = $request->except('hmac');
-        $hmac = $request->input('hmac');
+        $hmac   = $request->input('hmac');
         $secret = config('shopify.api_secret');
 
         // Sort parameters by key and create a query string.

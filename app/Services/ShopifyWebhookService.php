@@ -54,12 +54,12 @@ class ShopifyWebhookService
     public function registerAppUninstalledWebhook()
     {
         // Register the webhook for the app/uninstalled event
-        $url = '/webhooks.json';
+        $url  = '/webhooks.json';
         $data = [
             'webhook' => [
-                'topic' => 'app/uninstalled',
+                'topic'   => 'app/uninstalled',
                 'address' => route('webhook.app.uninstalled'),
-                'format' => 'json',
+                'format'  => 'json',
             ],
         ];
 
@@ -74,12 +74,12 @@ class ShopifyWebhookService
     public function registerCustomerDataRequestWebhook()
     {
         // Register the webhook for the app/uninstalled event
-        $url = '/webhooks.json';
+        $url  = '/webhooks.json';
         $data = [
             'webhook' => [
-                'topic' => 'customers/data_request',
+                'topic'   => 'customers/data_request',
                 'address' => route('webhook.customers.data_request'),
-                'format' => 'json',
+                'format'  => 'json',
             ],
         ];
 
@@ -94,12 +94,12 @@ class ShopifyWebhookService
     public function registerCustomerRedactWebhook()
     {
         // Register the webhook for the app/uninstalled event
-        $url = '/webhooks.json';
+        $url  = '/webhooks.json';
         $data = [
             'webhook' => [
-                'topic' => 'customers/redact',
+                'topic'   => 'customers/redact',
                 'address' => route('webhook.customers.redact'),
-                'format' => 'json',
+                'format'  => 'json',
             ],
         ];
 
@@ -114,12 +114,12 @@ class ShopifyWebhookService
     public function registerShopRedactWebhook()
     {
         // Register the webhook for the app/uninstalled event
-        $url = '/webhooks.json';
+        $url  = '/webhooks.json';
         $data = [
             'webhook' => [
-                'topic' => 'shop/redact',
+                'topic'   => 'shop/redact',
                 'address' => route('webhook.shop.redact'),
-                'format' => 'json',
+                'format'  => 'json',
             ],
         ];
 

@@ -40,7 +40,7 @@ class AuthController extends Controller
         ShopService $shopService,
         ShopifyWebhookService $webhookService
     ) {
-        $this->shopService = $shopService;
+        $this->shopService    = $shopService;
         $this->webhookService = $webhookService;
     }
 
@@ -52,7 +52,7 @@ class AuthController extends Controller
         }
 
         // run action to install shop
-        $shop = $installShop($request, $this->shopService);
+        $shop       = $installShop($request, $this->shopService);
         $shopDomain = $this->shopService->getShopDomain($request);
 
         if (! $shop) {
@@ -60,7 +60,7 @@ class AuthController extends Controller
                 'auth.redirect',
                 [
                     'apiKey' => config('shopify.api_key'),
-                    'url' => $this->getShopifyAuthorizeURI($request),
+                    'url'    => $this->getShopifyAuthorizeURI($request),
                 ]
             );
         }
@@ -71,8 +71,8 @@ class AuthController extends Controller
         return Redirect::route(
             'home',
             [
-                'shop' => $shopDomain,
-                'host' => $request->get('host'),
+                'shop'   => $shopDomain,
+                'host'   => $request->get('host'),
                 'locale' => $request->get('locale'),
             ]
         );
@@ -88,7 +88,7 @@ class AuthController extends Controller
             'auth.token',
             [
                 'shopDomain' => $redirectData['shopDomain'],
-                'target' => $redirectData['cleanTarget'],
+                'target'     => $redirectData['cleanTarget'],
             ]
         );
     }
@@ -99,10 +99,10 @@ class AuthController extends Controller
         $shopDomain = $this->shopService->getShopDomain($request);
 
         $query = http_build_query([
-            'client_id' => config('shopify.api_key'),
+            'client_id'    => config('shopify.api_key'),
             'redirect_uri' => route('authenticate'),
-            'scope' => config('shopify.api_scopes'),
-            'state' => csrf_token(),
+            'scope'        => config('shopify.api_scopes'),
+            'state'        => csrf_token(),
         ]);
 
         return sprintf(
@@ -127,30 +127,30 @@ class AuthController extends Controller
      */
     public function getTokenRedirectData(Request $request)
     {
-        $shopDomain = $this->shopService->getShopDomain($request);
-        $target = $request->query('target');
-        $query = parse_url($target, PHP_URL_QUERY);
+        $shopDomain  = $this->shopService->getShopDomain($request);
+        $target      = $request->query('target');
+        $query       = parse_url($target, PHP_URL_QUERY);
         $cleanTarget = $target;
 
         if ($query) {
-            $params = Util::parseQueryString($query);
-            $params['shop'] = $shopDomain;
-            $params['host'] = $request->get('host');
+            $params           = Util::parseQueryString($query);
+            $params['shop']   = $shopDomain;
+            $params['host']   = $request->get('host');
             $params['locale'] = $request->get('locale');
             unset($params['token']);
 
             $cleanTarget = trim(explode('?', $target)[0].'?'.http_build_query($params), '?');
         } else {
             $params = [
-                'shop' => $shopDomain,
-                'host' => $request->get('host'),
+                'shop'   => $shopDomain,
+                'host'   => $request->get('host'),
                 'locale' => $request->get('locale'),
             ];
             $cleanTarget = trim(explode('?', $target)[0].'?'.http_build_query($params), '?');
         }
 
         return [
-            'shopDomain' => $shopDomain,
+            'shopDomain'  => $shopDomain,
             'cleanTarget' => $cleanTarget,
         ];
     }

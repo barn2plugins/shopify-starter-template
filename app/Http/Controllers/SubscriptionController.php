@@ -39,9 +39,9 @@ class SubscriptionController extends Controller
         ShopService $shopService,
         ShopifyRestService $restAPI
     ) {
-        $this->request = $request;
+        $this->request     = $request;
         $this->shopService = $shopService;
-        $this->restAPI = $restAPI;
+        $this->restAPI     = $restAPI;
     }
 
     /**
@@ -96,8 +96,8 @@ class SubscriptionController extends Controller
     public function updateSubscription($chargeDetails)
     {
         $currentSubscription = $this->shopService->getShop()->subscriptions()->first();
-        $currentPlan = $this->getSubscriptionPlan($currentSubscription['plan']);
-        $newPlan = $this->getSubscriptionPlan($chargeDetails['name']);
+        $currentPlan         = $this->getSubscriptionPlan($currentSubscription['plan']);
+        $newPlan             = $this->getSubscriptionPlan($chargeDetails['name']);
 
         if ($currentPlan == $newPlan) {
             return;
@@ -105,17 +105,17 @@ class SubscriptionController extends Controller
 
         // Update the subscription plan
         $currentSubscription->update([
-            'charge_id' => $chargeDetails['id'],
-            'plan' => $newPlan,
-            'price' => $chargeDetails['price'],
-            'currency' => $chargeDetails['currency'],
-            'status' => $chargeDetails['status'],
-            'is_active' => $this->isSubscriptionActive($chargeDetails['status']),
-            'billing_on' => $chargeDetails['billing_on'],
-            'activated_on' => $chargeDetails['activated_on'],
+            'charge_id'     => $chargeDetails['id'],
+            'plan'          => $newPlan,
+            'price'         => $chargeDetails['price'],
+            'currency'      => $chargeDetails['currency'],
+            'status'        => $chargeDetails['status'],
+            'is_active'     => $this->isSubscriptionActive($chargeDetails['status']),
+            'billing_on'    => $chargeDetails['billing_on'],
+            'activated_on'  => $chargeDetails['activated_on'],
             'trial_ends_on' => $chargeDetails['trial_ends_on'],
-            'trial_days' => $chargeDetails['trial_days'],
-            'cancelled_on' => $chargeDetails['cancelled_on'],
+            'trial_days'    => $chargeDetails['trial_days'],
+            'cancelled_on'  => $chargeDetails['cancelled_on'],
         ]);
 
         return $currentSubscription;
@@ -130,17 +130,17 @@ class SubscriptionController extends Controller
     public function createSubscription($chargeDetails)
     {
         return $this->shopService->getShop()->subscriptions()->create([
-            'charge_id' => $chargeDetails['id'],
-            'plan' => $this->getSubscriptionPlan($chargeDetails['name']),
-            'price' => $chargeDetails['price'],
-            'currency' => $chargeDetails['currency'],
-            'status' => $chargeDetails['status'],
-            'is_active' => $this->isSubscriptionActive($chargeDetails['status']),
-            'billing_on' => $chargeDetails['billing_on'],
-            'activated_on' => $chargeDetails['activated_on'],
+            'charge_id'     => $chargeDetails['id'],
+            'plan'          => $this->getSubscriptionPlan($chargeDetails['name']),
+            'price'         => $chargeDetails['price'],
+            'currency'      => $chargeDetails['currency'],
+            'status'        => $chargeDetails['status'],
+            'is_active'     => $this->isSubscriptionActive($chargeDetails['status']),
+            'billing_on'    => $chargeDetails['billing_on'],
+            'activated_on'  => $chargeDetails['activated_on'],
             'trial_ends_on' => $chargeDetails['trial_ends_on'],
-            'trial_days' => $chargeDetails['trial_days'],
-            'cancelled_on' => $chargeDetails['cancelled_on'],
+            'trial_days'    => $chargeDetails['trial_days'],
+            'cancelled_on'  => $chargeDetails['cancelled_on'],
         ]);
     }
 

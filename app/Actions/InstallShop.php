@@ -16,7 +16,7 @@ class InstallShop
     public function __invoke(Request $request, ShopService $shopService)
     {
         $this->shopService = $shopService;
-        $this->request = $request;
+        $this->request     = $request;
 
         if ($this->request->missing('code')) {
             return false;
@@ -48,7 +48,7 @@ class InstallShop
 
         if (! $shop) {
             $shop = User::create([
-                'name' => $shopDomain,
+                'name'  => $shopDomain,
                 'email' => 'shop@'.$shopDomain,
             ]);
         } elseif ($shop->trashed()) {
@@ -66,14 +66,14 @@ class InstallShop
     public function getAccessToken()
     {
         $shopDomain = $this->shopService->getShopDomain($this->request);
-        $code = $this->request->get('code');
+        $code       = $this->request->get('code');
 
         $url = "https://{$shopDomain}/admin/oauth/access_token";
 
         $params = [
-            'client_id' => config('shopify.api_key'),
+            'client_id'     => config('shopify.api_key'),
             'client_secret' => config('shopify.api_secret'),
-            'code' => $code,
+            'code'          => $code,
         ];
 
         $response = Http::asForm()->post($url, $params);

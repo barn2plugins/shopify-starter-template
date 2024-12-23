@@ -17,7 +17,7 @@ class ShopifyTokenService
     public function decodeToken(string $token): array
     {
         try {
-            $parser = new Parser(new JoseEncoder);
+            $parser      = new Parser(new JoseEncoder);
             $parsedToken = $parser->parse($token);
 
             $claims = $parsedToken->claims()->all();

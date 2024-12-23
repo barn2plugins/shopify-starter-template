@@ -18,7 +18,7 @@ class IframeProtection
     public function handle(Request $request, Closure $next): Response
     {
         $response = $next($request);
-        $shop = (new ShopService)->getShopFromRequest($request);
+        $shop     = (new ShopService)->getShopFromRequest($request);
 
         if ($shop === null) {
             return $response;

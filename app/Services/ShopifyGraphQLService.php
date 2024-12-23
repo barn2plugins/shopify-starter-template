@@ -39,7 +39,7 @@ class ShopifyGraphQLService
         Request $request,
         ShopService $shopService
     ) {
-        $this->shopDomain = $shopService->getShopDomain($request);
+        $this->shopDomain  = $shopService->getShopDomain($request);
         $this->accessToken = $shopService->getAccessToken($request);
 
         // Create options for the API

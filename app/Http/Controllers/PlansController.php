@@ -35,7 +35,7 @@ class PlansController extends Controller
         ShopifyPlanService $planService
     ) {
         $this->shopifyBilling = $shopifyBilling;
-        $this->planService = $planService;
+        $this->planService    = $planService;
     }
 
     /**

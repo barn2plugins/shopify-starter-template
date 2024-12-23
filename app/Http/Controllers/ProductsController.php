@@ -55,7 +55,7 @@ class ProductsController extends Controller
         }
 
         return response()->json([
-            'success' => true,
+            'success'  => true,
             'products' => $response['body']->container['data']['products']['edges'],
         ], 200);
     }

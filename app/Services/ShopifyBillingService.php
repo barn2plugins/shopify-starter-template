@@ -45,9 +45,9 @@ class ShopifyBillingService
         ShopifyPlanService $planService,
         ShopifyGraphQLService $graphQlClient
     ) {
-        $this->request = $request;
-        $this->shopService = $shopService;
-        $this->planService = $planService;
+        $this->request       = $request;
+        $this->shopService   = $shopService;
+        $this->planService   = $planService;
         $this->graphQlClient = $graphQlClient;
     }
 
@@ -62,7 +62,7 @@ class ShopifyBillingService
             return false;
         }
 
-        $plan = $this->planService->getPlan($this->request->get('plan'));
+        $plan          = $this->planService->getPlan($this->request->get('plan'));
         $billingPeriod = $this->request->get('billing_period');
 
         $query = <<<'GRAPHQL'
@@ -93,16 +93,16 @@ class ShopifyBillingService
         GRAPHQL;
 
         $variables = [
-            'name' => $plan['title'],
+            'name'      => $plan['title'],
             'returnUrl' => route('subscription.create'),
             'trialDays' => 14,
-            'test' => true,
+            'test'      => true,
             'lineItems' => [
                 [
                     'plan' => [
                         'appRecurringPricingDetails' => [
                             'price' => [
-                                'amount' => $this->getBillingPrice($plan, $billingPeriod),
+                                'amount'       => $this->getBillingPrice($plan, $billingPeriod),
                                 'currencyCode' => 'USD',
                             ],
                             'interval' => $this->getBillingInterval($billingPeriod),
