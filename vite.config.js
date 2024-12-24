@@ -11,15 +11,12 @@ export default defineConfig({
             ],
             refresh: true,
         }),
-        react(),
+        react({ include: /\.(mdx|js|jsx|ts|tsx)$/ }),
     ],
     server: {
-        // Ensure proper HMR for Laravel development
-        hmr: {
-            host: 'localhost',
-        },
-        // Configure for HTTPS if needed
-        https: true,
+        https: false,
+        host: 'localhost',
+        port: 5173,
     },
     optimizeDeps: {
         include: ['@inertiajs/inertia', '@inertiajs/inertia-react', '@shopify/polaris', '@shopify/app-bridge-react'],

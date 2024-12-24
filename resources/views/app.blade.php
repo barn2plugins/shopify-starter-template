@@ -6,8 +6,8 @@
         <meta name="shopify-api-key" content="{{ config('shopify.api_key') }}"/>
         <title>{{ config('shopify.app_name') }}</title>
         <script src="https://cdn.shopify.com/shopifycloud/app-bridge.js"></script>
-        @vite('resources/css/app.css')
-        @vite('resources/js/app.jsx')
+        @viteReactRefresh
+        @vite(['resources/css/app.css', 'resources/js/app.jsx'])
         @inertiaHead
         @yield('styles')
     </head>
