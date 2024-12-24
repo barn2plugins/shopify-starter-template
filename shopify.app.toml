@@ -1,19 +1,21 @@
-# Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
-
-application_url = "https://app-domain.com/"
-embedded = true
 name = "Barn2 Starter App"
-handle = "barn2-starter-app"
-
-[access_scopes]
 scopes = "read_products,write_products,write_script_tags"
 
 [webhooks]
 api_version = "2024-10"
 
 [[webhooks.subscriptions]]
-topics = [ "app/uninstalled" ]
-compliance_topics = ["customers/data_request", "customers/redact", "shop/redact"]
+topic = "app/uninstalled"
+uri = "/webhooks/uninstalled"
 
-[auth]
-redirect_urls = [ "https://app-domain.com/authenticate" ]
+[[webhooks.subscriptions]]
+topic = "customers/data_request"
+uri = "/webhooks/customers/data_request"
+
+[[webhooks.subscriptions]]
+topic = "customers/redact"
+uri = "/webhooks/customers/redact"
+
+[[webhooks.subscriptions]]
+topic = "shop/redact"
+uri = "/webhooks/shop/redact"
