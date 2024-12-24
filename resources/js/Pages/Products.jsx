@@ -20,7 +20,6 @@ const Products = () => {
   const fetchData = async () => {
     try {
       const response = await axios.get('/products/get');
-      console.log(response);
       
       if ( response.status === 200 ) {
         setProducts(response.data.products);

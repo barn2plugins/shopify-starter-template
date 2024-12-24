@@ -93,6 +93,18 @@ class ShopifyAuthService
     }
 
     /**
+     * Verify shop is loaded as Shopify embeded app, not directly accessed
+     */
+    public function verifyShopifyRequest(Request $request): bool
+    {
+        if (! $request->has('host') && ! $request->has('shop') && ! $request->bearerToken()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * Login shop using JWT token
      */
     public function loginShopFromToken(string $token): bool

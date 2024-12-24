@@ -15,7 +15,6 @@ const Sample = () => {
                 setPageContent(response.data);
             }
         } catch (error) {
-            console.log('caught errors', error);
         } finally {
             setLoading(false);
         }

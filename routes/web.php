@@ -7,7 +7,6 @@ use Barn2App\Http\Controllers\ProductsController;
 use Barn2App\Http\Controllers\SampleController;
 use Barn2App\Http\Controllers\SubscriptionController;
 use Barn2App\Http\Controllers\WebhookController;
-use Barn2App\Http\Middleware\ShopifyVerify;
 use Illuminate\Support\Facades\Route;
 
 // Authentication routes
@@ -25,7 +24,7 @@ Route::group(['prefix' => 'webhook'], function () {
 });
 
 // App routes
-Route::middleware([ShopifyVerify::class])->group(function () {
+Route::middleware(['shopifyProtection'])->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('home');
 
     Route::get('/products', [ProductsController::class, 'index'])->name('products');

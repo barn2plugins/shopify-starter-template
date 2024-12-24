@@ -4,6 +4,7 @@ namespace Barn2App\Http\Middleware;
 
 use Barn2App\Actions\Hmac;
 use Barn2App\Exceptions\HttpException;
+use Barn2App\Exceptions\ShopifyUnauthorizedException;
 use Barn2App\Exceptions\SignatureVerificationException;
 use Barn2App\Models\User;
 use Barn2App\Services\ShopifyAuthService;
@@ -54,6 +55,10 @@ class ShopifyVerify
      */
     public function handle(Request $request, Closure $next): Response
     {
+        if (! $this->shopifyAuth->verifyShopifyRequest($request)) {
+            throw new ShopifyUnauthorizedException('Unauthorized');
+        }
+
         if (Hmac::verify($request) === false) {
             throw new SignatureVerificationException('Unable to verify signature.');
         }
