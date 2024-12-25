@@ -121,4 +121,37 @@ class WebhookController extends Controller
 
         // Do the necessary logic here
     }
+
+    /**
+     * Handle a customer data shop update webhook from Shopify
+     *
+     * @return void
+     */
+    public function shopUpdate()
+    {
+        if (Hmac::verify($this->request) === false) {
+            throw new SignatureVerificationException('Unable to verify signature.');
+        }
+
+        if (! $this->request->has('shop_domain')) {
+            return;
+        }
+
+        // Typically we will track if the shop went live
+        $shopDomain = $this->request->input('shop_domain');
+        $planName   = $this->request->input('plan_name');
+        if ($planName === 'partner_test' || $planName === 'development' || $planName === 'affiliate') {
+            // Ignore these plans
+            return;
+        }
+
+        $shop = $this->shopService->getShop($shopDomain);
+        $shop->update([
+            'is_partner_development' => false,
+        ]);
+
+        // Do some more necessary actions 
+
+        return;
+    }
 }

@@ -43,7 +43,7 @@ class ShopifyWebhookService
         $this->registerCustomerDataRequestWebhook();
         $this->registerCustomerRedactWebhook();
         $this->registerShopRedactWebhook();
-
+        $this->registerShopUpdateWebhook();
     }
 
     /**
@@ -119,6 +119,26 @@ class ShopifyWebhookService
             'webhook' => [
                 'topic'   => 'shop/redact',
                 'address' => route('webhook.shop.redact'),
+                'format'  => 'json',
+            ],
+        ];
+
+        return $this->restAPI->post($url, $data);
+    }
+
+    /**
+     * Register the webhook for the shop/redact event.
+     *
+     * @return mixed
+     */
+    public function registerShopUpdateWebhook()
+    {
+        // Register the webhook for the app/uninstalled event
+        $url  = '/webhooks.json';
+        $data = [
+            'webhook' => [
+                'topic'   => 'shop/update',
+                'address' => route('webhook.shop.update'),
                 'format'  => 'json',
             ],
         ];

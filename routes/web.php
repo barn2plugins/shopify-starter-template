@@ -21,6 +21,7 @@ Route::group(['prefix' => 'webhook'], function () {
     Route::post('/customers/data_request', [WebhookController::class, 'customersDataRequest'])->name('webhook.customers.data_request');
     Route::post('/customers/redact', [WebhookController::class, 'customersRedact'])->name('webhook.customers.redact');
     Route::post('/shop/redact', [WebhookController::class, 'shopRedact'])->name('webhook.shop.redact');
+    Route::post('/shop/update', [WebhookController::class, 'shopUpdate'])->name('webhook.shop.update');
 });
 
 // App routes
