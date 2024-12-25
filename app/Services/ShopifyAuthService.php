@@ -97,7 +97,9 @@ class ShopifyAuthService
      */
     public function verifyShopifyRequest(Request $request): bool
     {
-        if (! $request->has('host') && ! $request->has('shop') && ! $request->bearerToken()) {
+        if (
+            ! $request->user() && ! $request->has('host') && ! $request->has('shop') && ! $request->bearerToken()
+        ) {
             return false;
         }
 

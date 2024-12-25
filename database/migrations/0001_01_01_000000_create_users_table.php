@@ -17,6 +17,10 @@ return new class extends Migration
             $table->string('email')->unique()->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password')->nullable();
+            $table->string('shop_owner')->nullable();
+            $table->string('plan')->nullable();
+            $table->string('plan_display_name')->nullable();
+            $table->boolean('is_partner_development')->default(false);
             $table->rememberToken();
             $table->softDeletes();
             $table->timestamps();

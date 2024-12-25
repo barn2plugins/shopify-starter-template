@@ -4,6 +4,7 @@ namespace Barn2App\Actions;
 
 use Barn2App\Models\User;
 use Barn2App\Services\ShopService;
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
@@ -28,7 +29,21 @@ class InstallShop
         if ($accessToken === false) {
             return false;
         }
-        $shop->update(['password' => $accessToken]);
+        $shopDetails = $this->getShopDetails($accessToken);
+        if (! $shopDetails) {
+            return $shop;
+        }
+
+        // Update the shop
+        $shop->update([
+            'password'               => $accessToken,
+            'email'                  => $shopDetails['email'],
+            'email_verified_at'      => now(),
+            'shop_owner'             => $shopDetails['shop_owner'],
+            'plan'                   => $shopDetails['plan_name'],
+            'plan_display_name'      => $shopDetails['plan_display_name'],
+            'is_partner_development' => $this->isDevelopmentStore($shopDetails['plan_name']),
+        ]);
 
         return $shop;
     }
@@ -83,5 +98,48 @@ class InstallShop
         }
 
         return $response->json('access_token');
+    }
+
+    /**
+     * Get the Shopify shop details
+     *
+     * @param  mixed  $accessToken
+     * @return mixed
+     *
+     * @throws ConnectionException
+     */
+    public function getShopDetails($accessToken)
+    {
+        $shopDomain = $this->shopService->getShopDomain($this->request);
+
+        $endpoint = "https://$shopDomain/admin/api/2024-10/shop.json";
+
+        $response = Http::withHeaders([
+            'X-Shopify-Access-Token' => $accessToken,
+        ])->get($endpoint);
+
+        if ($response->successful()) {
+            $shopDetails = $response->json();
+
+            return $shopDetails['shop'];
+        }
+
+        return false;
+    }
+
+    /**
+     * Check if the store a development store
+     *
+     * @param  mixed  $planName
+     * @return bool
+     */
+    public function isDevelopmentStore($planName)
+    {
+        $isDevelopmentStore = false;
+        if ($planName === 'partner_test' || $planName === 'development' || $planName === 'affiliate') {
+            $isDevelopmentStore = true;
+        }
+
+        return $isDevelopmentStore;
     }
 }
