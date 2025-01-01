@@ -150,8 +150,7 @@ class WebhookController extends Controller
             'is_partner_development' => false,
         ]);
 
-        // Do some more necessary actions 
+        // Do some more necessary actions
 
-        return;
     }
 }

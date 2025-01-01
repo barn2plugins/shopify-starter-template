@@ -23,10 +23,6 @@ class User extends Authenticatable
         'email',
         'email_verified_at',
         'password',
-        'shop_owner',
-        'plan',
-        'plan_display_name',
-        'is_partner_development',
     ];
 
     /**
@@ -59,5 +55,15 @@ class User extends Authenticatable
     public function subscriptions()
     {
         return $this->hasMany(Subscription::class);
+    }
+
+    /**
+     * Get the subscriptions for the user
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function store()
+    {
+        return $this->hasOne(Store::class);
     }
 }

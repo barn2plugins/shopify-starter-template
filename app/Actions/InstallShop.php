@@ -36,14 +36,29 @@ class InstallShop
 
         // Update the shop
         $shop->update([
-            'password'               => $accessToken,
-            'email'                  => $shopDetails['email'],
-            'email_verified_at'      => now(),
-            'shop_owner'             => $shopDetails['shop_owner'],
-            'plan'                   => $shopDetails['plan_name'],
-            'plan_display_name'      => $shopDetails['plan_display_name'],
-            'is_partner_development' => $this->isDevelopmentStore($shopDetails['plan_name']),
+            'password'          => $accessToken,
+            'email'             => $shopDetails['email'],
+            'email_verified_at' => now(),
         ]);
+
+        $shop->store()->create(
+            [
+                'name'                                 => $shopDetails['name'],
+                'owner_name'                           => $shopDetails['shop_owner'],
+                'plan'                                 => $shopDetails['plan_name'],
+                'plan_display_name'                    => $shopDetails['plan_display_name'],
+                'is_partner_development'               => $this->isDevelopmentStore($shopDetails['plan_name']),
+                'country_code'                         => $shopDetails['country_code'],
+                'currency'                             => $shopDetails['currency'],
+                'timezone'                             => $shopDetails['timezone'],
+                'iana_timezone'                        => $shopDetails['iana_timezone'],
+                'money_format'                         => $shopDetails['money_format'],
+                'money_with_currency_format'           => $shopDetails['money_with_currency_format'],
+                'money_in_emails_format'               => $shopDetails['money_in_emails_format'],
+                'money_with_currency_in_emails_format' => $shopDetails['money_with_currency_in_emails_format'],
+                'checkout_api_supported'               => $shopDetails['checkout_api_supported'],
+            ]
+        );
 
         return $shop;
     }
@@ -120,6 +135,7 @@ class InstallShop
 
         if ($response->successful()) {
             $shopDetails = $response->json();
+            ray($shopDetails['shop']);
 
             return $shopDetails['shop'];
         }
