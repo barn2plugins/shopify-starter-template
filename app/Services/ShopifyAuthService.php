@@ -1,8 +1,8 @@
 <?php
 
-namespace Barn2App\Services;
+namespace App\Services;
 
-use Barn2App\Models\User;
+use App\Models\User;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -15,14 +15,14 @@ class ShopifyAuthService
     /**
      * The service responsible for decoding and validating Shopify tokens.
      *
-     * @var \Barn2App\Services\ShopifyTokenService
+     * @var \App\Services\ShopifyTokenService
      */
     private $tokenService;
 
     /**
      * The service responsible for retrieving shop details
      *
-     * @var \Barn2App\Services\ShopService
+     * @var \App\Services\ShopService
      */
     private $shopService;
 

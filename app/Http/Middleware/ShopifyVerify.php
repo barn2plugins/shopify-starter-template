@@ -1,14 +1,14 @@
 <?php
 
-namespace Barn2App\Http\Middleware;
+namespace App\Http\Middleware;
 
-use Barn2App\Actions\Hmac;
-use Barn2App\Exceptions\HttpException;
-use Barn2App\Exceptions\ShopifyUnauthorizedException;
-use Barn2App\Exceptions\SignatureVerificationException;
-use Barn2App\Models\User;
-use Barn2App\Services\ShopifyAuthService;
-use Barn2App\Services\ShopService;
+use App\Actions\Hmac;
+use App\Exceptions\HttpException;
+use App\Exceptions\ShopifyUnauthorizedException;
+use App\Exceptions\SignatureVerificationException;
+use App\Models\User;
+use App\Services\ShopifyAuthService;
+use App\Services\ShopService;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -19,14 +19,14 @@ class ShopifyVerify
     /**
      * Responsible for shopify auth services
      *
-     * @var \Barn2App\Services\ShopifyAuthService
+     * @var \App\Services\ShopifyAuthService
      */
     private $shopifyAuth;
 
     /**
      * The shop service.
      *
-     * @var \Barn2App\Services\ShopService
+     * @var \App\Services\ShopService
      */
     private $shopService;
 

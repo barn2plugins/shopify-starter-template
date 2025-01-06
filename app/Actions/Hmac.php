@@ -1,6 +1,6 @@
 <?php
 
-namespace Barn2App\Actions;
+namespace App\Actions;
 
 use Illuminate\Http\Request;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Barn2App\Exceptions;
+namespace App\Exceptions;
 
 use Exception;
 

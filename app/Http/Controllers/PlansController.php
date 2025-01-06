@@ -1,9 +1,9 @@
 <?php
 
-namespace Barn2App\Http\Controllers;
+namespace App\Http\Controllers;
 
-use Barn2App\Services\ShopifyBillingService;
-use Barn2App\Services\ShopifyPlanService;
+use App\Services\ShopifyBillingService;
+use App\Services\ShopifyPlanService;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Http\JsonResponse;
 use Inertia\Inertia;

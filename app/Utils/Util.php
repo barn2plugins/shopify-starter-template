@@ -1,6 +1,6 @@
 <?php
 
-namespace Barn2App\Utils;
+namespace App\Utils;
 
 class Util
 {

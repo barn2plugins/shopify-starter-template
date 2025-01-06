@@ -1,9 +1,9 @@
 <?php
 
-namespace Barn2App\Http\Controllers;
+namespace App\Http\Controllers;
 
-use Barn2App\Services\ShopifyRestService;
-use Barn2App\Services\ShopService;
+use App\Services\ShopifyRestService;
+use App\Services\ShopService;
 use Illuminate\Http\Request;
 
 class SubscriptionController extends Controller

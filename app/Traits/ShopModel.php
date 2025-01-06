@@ -1,6 +1,6 @@
 <?php
 
-namespace Barn2App\Traits;
+namespace App\Traits;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
 

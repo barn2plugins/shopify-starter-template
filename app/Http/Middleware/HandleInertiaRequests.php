@@ -1,6 +1,6 @@
 <?php
 
-namespace Barn2App\Http\Middleware;
+namespace App\Http\Middleware;
 
 use Illuminate\Http\Request;
 use Inertia\Middleware;

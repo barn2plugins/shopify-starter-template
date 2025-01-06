@@ -1,8 +1,8 @@
 <?php
 
-namespace Barn2App\Services;
+namespace App\Services;
 
-use Barn2App\Exceptions\InvalidTokenException;
+use App\Exceptions\InvalidTokenException;
 use Lcobucci\JWT\Encoding\JoseEncoder;
 use Lcobucci\JWT\Token\Parser;
 use Lcobucci\JWT\UnencryptedToken;

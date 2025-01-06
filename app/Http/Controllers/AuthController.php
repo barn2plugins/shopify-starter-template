@@ -1,12 +1,12 @@
 <?php
 
-namespace Barn2App\Http\Controllers;
+namespace App\Http\Controllers;
 
-use Barn2App\Actions\InstallShop;
-use Barn2App\Exceptions\MissingShopDomainException;
-use Barn2App\Services\ShopifyWebhookService;
-use Barn2App\Services\ShopService;
-use Barn2App\Utils\Util;
+use App\Actions\InstallShop;
+use App\Exceptions\MissingShopDomainException;
+use App\Services\ShopifyWebhookService;
+use App\Services\ShopService;
+use App\Utils\Util;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\View;

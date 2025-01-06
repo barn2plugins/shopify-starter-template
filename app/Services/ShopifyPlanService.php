@@ -1,6 +1,6 @@
 <?php
 
-namespace Barn2App\Services;
+namespace App\Services;
 
 use Carbon\Carbon;
 

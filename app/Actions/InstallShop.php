@@ -1,9 +1,9 @@
 <?php
 
-namespace Barn2App\Actions;
+namespace App\Actions;
 
-use Barn2App\Models\User;
-use Barn2App\Services\ShopService;
+use App\Models\User;
+use App\Services\ShopService;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;

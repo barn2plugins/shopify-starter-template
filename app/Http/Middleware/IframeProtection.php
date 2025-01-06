@@ -1,8 +1,8 @@
 <?php
 
-namespace Barn2App\Http\Middleware;
+namespace App\Http\Middleware;
 
-use Barn2App\Services\ShopService;
+use App\Services\ShopService;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;

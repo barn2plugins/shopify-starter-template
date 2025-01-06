@@ -1,9 +1,9 @@
 <?php
 
-namespace Barn2App\Models;
+namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Barn2App\Traits\ShopModel;
+use App\Traits\ShopModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;

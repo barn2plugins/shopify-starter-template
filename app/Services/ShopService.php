@@ -1,9 +1,9 @@
 <?php
 
-namespace Barn2App\Services;
+namespace App\Services;
 
-use Barn2App\Exceptions\InvalidShopDomainException;
-use Barn2App\Models\User;
+use App\Exceptions\InvalidShopDomainException;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class ShopService

@@ -1,22 +1,22 @@
 <?php
 
-namespace Barn2App\Services;
+namespace App\Services;
 
-use Barn2App\Models\User;
+use App\Models\User;
 
 class ShopifyWebhookService
 {
     /**
      * The User model.
      *
-     * @var \Barn2App\Models\User
+     * @var \App\Models\User
      */
     private $shop;
 
     /**
      * The Shopify REST API service.
      *
-     * @var \Barn2App\Services\ShopifyRestService
+     * @var \App\Services\ShopifyRestService
      */
     private $restAPI;
 
@@ -28,7 +28,7 @@ class ShopifyWebhookService
     /**
      * Register a webhook for the shop in Shopify.
      *
-     * @param  \Barn2App\Models\User  $shop  The shop to register the webhook for.
+     * @param  \App\Models\User  $shop  The shop to register the webhook for.
      * @return bool
      */
     public function register(User $shop)

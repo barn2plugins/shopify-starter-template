@@ -1,10 +1,10 @@
 <?php
 
-namespace Barn2App\Http\Controllers;
+namespace App\Http\Controllers;
 
-use Barn2App\Actions\Hmac;
-use Barn2App\Exceptions\SignatureVerificationException;
-use Barn2App\Services\ShopService;
+use App\Actions\Hmac;
+use App\Exceptions\SignatureVerificationException;
+use App\Services\ShopService;
 use Illuminate\Http\Request;
 
 class WebhookController extends Controller
@@ -12,7 +12,7 @@ class WebhookController extends Controller
     /**
      * The shop service.
      *
-     * @var \Barn2App\Services\ShopService
+     * @var \App\Services\ShopService
      */
     protected $shopService;
 

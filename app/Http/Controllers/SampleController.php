@@ -1,6 +1,6 @@
 <?php
 
-namespace Barn2App\Http\Controllers;
+namespace App\Http\Controllers;
 
 use Inertia\Inertia;
 
