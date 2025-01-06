@@ -1,12 +1,12 @@
 <?php
 
-use Barn2App\Http\Controllers\AuthController;
-use Barn2App\Http\Controllers\DashboardController;
-use Barn2App\Http\Controllers\PlansController;
-use Barn2App\Http\Controllers\ProductsController;
-use Barn2App\Http\Controllers\SampleController;
-use Barn2App\Http\Controllers\SubscriptionController;
-use Barn2App\Http\Controllers\WebhookController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PlansController;
+use App\Http\Controllers\ProductsController;
+use App\Http\Controllers\SampleController;
+use App\Http\Controllers\SubscriptionController;
+use App\Http\Controllers\WebhookController;
 use Illuminate\Support\Facades\Route;
 
 // Authentication routes

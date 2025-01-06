@@ -1,5 +1,5 @@
 <?php
 
 return [
-    Barn2App\Providers\AppServiceProvider::class,
+    App\Providers\AppServiceProvider::class,
 ];

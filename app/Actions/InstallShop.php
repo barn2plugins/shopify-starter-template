@@ -135,8 +135,6 @@ class InstallShop
 
         if ($response->successful()) {
             $shopDetails = $response->json();
-            ray($shopDetails['shop']);
-
             return $shopDetails['shop'];
         }
 
