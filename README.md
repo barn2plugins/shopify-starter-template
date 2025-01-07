@@ -11,6 +11,10 @@ Install npm packages
 ```sh
 npm install
 ```
+Build assets file
+```sh
+npm run dev
+```
 Copy .env file from .env.example
 ```sh
 cp .env.example .env
