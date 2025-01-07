@@ -76,7 +76,7 @@ class AuthController extends Controller
         }
 
         // Register webhooks with Shopify
-        $this->webhookService->register($shop);
+        $this->webhookService->register($request, $shop);
 
         return Redirect::route(
             'home',

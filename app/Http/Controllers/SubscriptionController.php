@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\ShopifyRestService;
+use App\Services\ShopifyGraphQLService;
 use App\Services\ShopService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class SubscriptionController extends Controller
@@ -23,11 +24,11 @@ class SubscriptionController extends Controller
     protected $shopService;
 
     /**
-     * The Shopify REST API service
+     * The Shopify GraphQL API service
      *
-     * @var ShopifyRestService
+     * @var ShopifyGraphQLService
      */
-    protected $restAPI;
+    protected $graphQlClient;
 
     /**
      * Create a new SubscriptionController instance
@@ -37,11 +38,11 @@ class SubscriptionController extends Controller
     public function __construct(
         Request $request,
         ShopService $shopService,
-        ShopifyRestService $restAPI
+        ShopifyGraphQLService $graphQlClient
     ) {
-        $this->request     = $request;
-        $this->shopService = $shopService;
-        $this->restAPI     = $restAPI;
+        $this->request       = $request;
+        $this->shopService   = $shopService;
+        $this->graphQlClient = $graphQlClient;
     }
 
     /**
@@ -55,17 +56,42 @@ class SubscriptionController extends Controller
             return redirect()->route('home');
         }
 
-        $chargeId = $this->request->get('charge_id');
+        $query = <<<'QUERY'
+            query GetRecurringApplicationCharges {
+                currentAppInstallation {
+                    activeSubscriptions {
+                        id
+                        name
+                        status
+                        createdAt
+                        currentPeriodEnd
+                        trialDays
+                        lineItems {
+                            id
+                            plan {
+                                pricingDetails {
+                                    __typename
+                                    ... on AppRecurringPricing {
+                                        price {
+                                            amount
+                                            currencyCode
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        QUERY;
 
-        $url = "/recurring_application_charges/{$chargeId}.json";
+        $response = $this->graphQlClient->query($query);
 
-        $response = $this->restAPI->get($url);
-
-        if ($response === false) {
+        if ($response['status'] !== 200) {
             return redirect()->route('home');
         }
 
-        $this->createOrUpdateSubscription($response['recurring_application_charge']);
+        $this->createOrUpdateSubscription($response['body']->container['data']['currentAppInstallation']['activeSubscriptions'][0]);
 
         return redirect()->route('home');
     }
@@ -105,17 +131,16 @@ class SubscriptionController extends Controller
 
         // Update the subscription plan
         $currentSubscription->update([
-            'charge_id'     => $chargeDetails['id'],
+            'charge_id'     => $this->extractChargeID($chargeDetails['id']),
             'plan'          => $newPlan,
-            'price'         => $chargeDetails['price'],
-            'currency'      => $chargeDetails['currency'],
-            'status'        => $chargeDetails['status'],
+            'price'         => $chargeDetails['lineItems'][0]['plan']['pricingDetails']['price']['amount'],
+            'currency'      => $chargeDetails['lineItems'][0]['plan']['pricingDetails']['price']['currencyCode'],
+            'status'        => strtolower($chargeDetails['status']),
             'is_active'     => $this->isSubscriptionActive($chargeDetails['status']),
-            'billing_on'    => $chargeDetails['billing_on'],
-            'activated_on'  => $chargeDetails['activated_on'],
-            'trial_ends_on' => $chargeDetails['trial_ends_on'],
-            'trial_days'    => $chargeDetails['trial_days'],
-            'cancelled_on'  => $chargeDetails['cancelled_on'],
+            'billing_on'    => Carbon::parse($chargeDetails['currentPeriodEnd'])->toDateTimeString(),
+            'activated_on'  => Carbon::parse($chargeDetails['createdAt'])->toDateTimeString(),
+            'trial_ends_on' => (Carbon::parse($chargeDetails['createdAt'])->addDays($chargeDetails['trialDays']))->toDateTimeString(),
+            'trial_days'    => $chargeDetails['trialDays'],
         ]);
 
         return $currentSubscription;
@@ -130,17 +155,16 @@ class SubscriptionController extends Controller
     public function createSubscription($chargeDetails)
     {
         return $this->shopService->getShop()->subscriptions()->create([
-            'charge_id'     => $chargeDetails['id'],
+            'charge_id'     => $this->extractChargeID($chargeDetails['id']),
             'plan'          => $this->getSubscriptionPlan($chargeDetails['name']),
-            'price'         => $chargeDetails['price'],
-            'currency'      => $chargeDetails['currency'],
-            'status'        => $chargeDetails['status'],
+            'price'         => $chargeDetails['lineItems'][0]['plan']['pricingDetails']['price']['amount'],
+            'currency'      => $chargeDetails['lineItems'][0]['plan']['pricingDetails']['price']['currencyCode'],
+            'status'        => strtolower($chargeDetails['status']),
             'is_active'     => $this->isSubscriptionActive($chargeDetails['status']),
-            'billing_on'    => $chargeDetails['billing_on'],
-            'activated_on'  => $chargeDetails['activated_on'],
-            'trial_ends_on' => $chargeDetails['trial_ends_on'],
-            'trial_days'    => $chargeDetails['trial_days'],
-            'cancelled_on'  => $chargeDetails['cancelled_on'],
+            'billing_on'    => Carbon::parse($chargeDetails['currentPeriodEnd'])->toDateTimeString(),
+            'activated_on'  => Carbon::parse($chargeDetails['createdAt'])->toDateTimeString(),
+            'trial_ends_on' => (Carbon::parse($chargeDetails['createdAt'])->addDays($chargeDetails['trialDays']))->toDateTimeString(),
+            'trial_days'    => $chargeDetails['trialDays'],
         ]);
     }
 
@@ -184,6 +208,23 @@ class SubscriptionController extends Controller
      */
     public function isSubscriptionActive($status)
     {
-        return $status === 'active';
+        return $status === 'ACTIVE';
+    }
+
+    /**
+     * Extracts the numeric charge ID from a given string.
+     *
+     * @param  string  $id  The input string containing the charge ID.
+     * @return int|false The extracted charge ID as an integer, or false if no match is found.
+     */
+    public function extractChargeID($id)
+    {
+        if (preg_match('/(\d+)$/', $id, $matches)) {
+            $number = $matches[1];
+
+            return $number;
+        }
+
+        return false;
     }
 }

@@ -3,7 +3,11 @@
 namespace App\Services;
 
 use App\Models\User;
+use Illuminate\Http\Request;
 
+/**
+ * This service registers the webhooks with Shopify during the app installation process
+ */
 class ShopifyWebhookService
 {
     /**
@@ -14,15 +18,31 @@ class ShopifyWebhookService
     private $shop;
 
     /**
-     * The Shopify REST API service.
+     * The Shopify Shop Service
+     *
+     * @var \App\Services\ShopService
+     */
+    private $shopService;
+
+    /**
+     * The Shopify Graph QL Service
+     *
+     * @var \App\Services\ShopifyGraphQLService
+     */
+    private $graphQlClient;
+
+    /**
+     * The Shopify REST API Service
      *
      * @var \App\Services\ShopifyRestService
      */
     private $restAPI;
 
-    public function __construct(ShopifyRestService $restAPI)
+    public function __construct(ShopService $shopService, ShopifyGraphQLService $graphQlClient, ShopifyRestService $restAPI)
     {
-        $this->restAPI = $restAPI;
+        $this->shopService   = $shopService;
+        $this->graphQlClient = $graphQlClient;
+        $this->restAPI       = $restAPI;
     }
 
     /**
@@ -31,14 +51,18 @@ class ShopifyWebhookService
      * @param  \App\Models\User  $shop  The shop to register the webhook for.
      * @return bool
      */
-    public function register(User $shop)
+    public function register(Request $request, User $shop)
     {
         $this->shop = $shop;
 
-        if (! $shop) {
+        if (! $this->shop) {
             return false;
         }
 
+        // Setup graphql client
+        $this->setupGraphQlClient($request);
+
+        // register application webhooks with Shopify
         $this->registerAppUninstalledWebhook();
         $this->registerCustomerDataRequestWebhook();
         $this->registerCustomerRedactWebhook();
@@ -47,23 +71,63 @@ class ShopifyWebhookService
     }
 
     /**
-     * Register the webhook for the app/uninstalled event.
+     * Sets up the GraphQL client with the access token and session for the shop.
+     *
+     * This method retrieves the access token for the shop using the shop service
+     * and applies it to the GraphQL client. It then initializes the session for
+     * the client to ensure authenticated requests can be made.
+     *
+     * @param  \Illuminate\Http\Request  $request  The HTTP request object containing shop information.
+     * @return void
+     */
+    public function setupGraphQlClient(Request $request)
+    {
+        $accessToken = $this->shopService->getAccessToken($request);
+        $this->graphQlClient->setAccessToken($accessToken);
+        $this->graphQlClient->setSession();
+    }
+
+    /**
+     * Register the webhook for the APP_UNINSTALLED event.
      *
      * @return mixed
      */
     public function registerAppUninstalledWebhook()
     {
-        // Register the webhook for the app/uninstalled event
-        $url  = '/webhooks.json';
-        $data = [
-            'webhook' => [
-                'topic'   => 'app/uninstalled',
-                'address' => route('webhook.app.uninstalled'),
-                'format'  => 'json',
+        // Register the webhook for the APP_UNINSTALLED event
+        $query = <<<'QUERY'
+            mutation webhookSubscriptionCreate($topic: WebhookSubscriptionTopic!, $webhookSubscription: WebhookSubscriptionInput!) {
+                webhookSubscriptionCreate(topic: $topic, webhookSubscription: $webhookSubscription) {
+                    userErrors {
+                        field
+                        message
+                    }
+                    webhookSubscription {
+                        id
+                        topic
+                        filter
+                        format
+                        endpoint {
+                            __typename
+                            ... on WebhookHttpEndpoint {
+                                callbackUrl
+                            }
+                        }
+                    }
+                }
+            }
+        QUERY;
+
+        $variables = [
+            'topic'               => 'APP_UNINSTALLED',
+            'webhookSubscription' => [
+                'callbackUrl' => route('webhook.app.uninstalled'),
+                'format'      => 'JSON',
+                'filter'      => 'type:lookbook',
             ],
         ];
 
-        return $this->restAPI->post($url, $data);
+        return $this->graphQlClient->query($query, $variables);
     }
 
     /**
@@ -133,16 +197,39 @@ class ShopifyWebhookService
      */
     public function registerShopUpdateWebhook()
     {
-        // Register the webhook for the app/uninstalled event
-        $url  = '/webhooks.json';
-        $data = [
-            'webhook' => [
-                'topic'   => 'shop/update',
-                'address' => route('webhook.shop.update'),
-                'format'  => 'json',
+        // Register the webhook for the SHOP_UPDATE event
+        $query = <<<'QUERY'
+            mutation webhookSubscriptionCreate($topic: WebhookSubscriptionTopic!, $webhookSubscription: WebhookSubscriptionInput!) {
+                webhookSubscriptionCreate(topic: $topic, webhookSubscription: $webhookSubscription) {
+                    userErrors {
+                        field
+                        message
+                    }
+                    webhookSubscription {
+                        id
+                        topic
+                        filter
+                        format
+                        endpoint {
+                            __typename
+                            ... on WebhookHttpEndpoint {
+                                callbackUrl
+                            }
+                        }
+                    }
+                }
+            }
+        QUERY;
+
+        $variables = [
+            'topic'               => 'SHOP_UPDATE',
+            'webhookSubscription' => [
+                'callbackUrl' => route('webhook.shop.update'),
+                'format'      => 'JSON',
+                'filter'      => 'type:lookbook',
             ],
         ];
 
-        return $this->restAPI->post($url, $data);
+        return $this->graphQlClient->query($query, $variables);
     }
 }
