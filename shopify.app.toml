@@ -5,21 +5,21 @@ scopes = "read_products,write_products,write_script_tags"
 api_version = "2024-10"
 
 [[webhooks.subscriptions]]
-topic = "app/uninstalled"
+topics = ["app/uninstalled"]
 uri = "/webhooks/uninstalled"
 
 [[webhooks.subscriptions]]
-topic = "customers/data_request"
+topics = ["customers/data_request"]
 uri = "/webhooks/customers/data_request"
 
 [[webhooks.subscriptions]]
-topic = "customers/redact"
+topics = ["customers/redact"]
 uri = "/webhooks/customers/redact"
 
 [[webhooks.subscriptions]]
-topic = "shop/redact"
+topics = ["shop/redact"]
 uri = "/webhooks/shop/redact"
 
 [[webhooks.subscriptions]]
-topic = "shop/update"
+topics = ["shop/update"]
 uri = "/webhooks/shop/update"
