@@ -3,6 +3,7 @@
 namespace App\Actions;
 
 use App\Models\User;
+use App\Services\ShopifyGraphQLService;
 use App\Services\ShopService;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Request;
@@ -10,14 +11,32 @@ use Illuminate\Support\Facades\Http;
 
 class InstallShop
 {
+    /**
+     * The ShopService
+     *
+     * @var ShopService
+     */
     protected $shopService;
 
+    /**
+     * The GraphQL client
+     *
+     * @var ShopifyGraphQLService
+     */
+    protected $graphQlClient;
+
+    /**
+     * The Request
+     *
+     * @var Request
+     */
     protected $request;
 
-    public function __invoke(Request $request, ShopService $shopService)
+    public function __invoke(Request $request, ShopService $shopService, ShopifyGraphQLService $graphQlClient)
     {
-        $this->shopService = $shopService;
-        $this->request     = $request;
+        $this->shopService   = $shopService;
+        $this->request       = $request;
+        $this->graphQlClient = $graphQlClient;
 
         if ($this->request->missing('code')) {
             return false;
@@ -29,7 +48,13 @@ class InstallShop
         if ($accessToken === false) {
             return false;
         }
-        $shopDetails = $this->getShopDetails($accessToken);
+
+        // Setup the GraphQl Client
+        $this->graphQlClient->setAccessToken($accessToken);
+        $this->graphQlClient->setSession();
+
+        // Get shop details
+        $shopDetails = $this->getShopDetails();
         if (! $shopDetails) {
             return $shop;
         }
@@ -44,19 +69,18 @@ class InstallShop
         $shop->store()->create(
             [
                 'name'                                 => $shopDetails['name'],
-                'owner_name'                           => $shopDetails['shop_owner'],
-                'plan'                                 => $shopDetails['plan_name'],
-                'plan_display_name'                    => $shopDetails['plan_display_name'],
-                'is_partner_development'               => $this->isDevelopmentStore($shopDetails['plan_name']),
-                'country_code'                         => $shopDetails['country_code'],
-                'currency'                             => $shopDetails['currency'],
-                'timezone'                             => $shopDetails['timezone'],
-                'iana_timezone'                        => $shopDetails['iana_timezone'],
-                'money_format'                         => $shopDetails['money_format'],
-                'money_with_currency_format'           => $shopDetails['money_with_currency_format'],
-                'money_in_emails_format'               => $shopDetails['money_in_emails_format'],
-                'money_with_currency_in_emails_format' => $shopDetails['money_with_currency_in_emails_format'],
-                'checkout_api_supported'               => $shopDetails['checkout_api_supported'],
+                'owner_name'                           => $shopDetails['shopOwnerName'],
+                'plan_display_name'                    => $shopDetails['plan']['displayName'],
+                'is_partner_development'               => $shopDetails['plan']['partnerDevelopment'],
+                'is_shopify_plus'                      => $shopDetails['plan']['shopifyPlus'],
+                'currency'                             => $shopDetails['currencyCode'],
+                'timezone'                             => $shopDetails['timezoneAbbreviation'],
+                'iana_timezone'                        => $shopDetails['ianaTimezone'],
+                'money_format'                         => $shopDetails['currencyFormats']['moneyFormat'],
+                'money_with_currency_format'           => $shopDetails['currencyFormats']['moneyWithCurrencyFormat'],
+                'money_in_emails_format'               => $shopDetails['currencyFormats']['moneyInEmailsFormat'],
+                'money_with_currency_in_emails_format' => $shopDetails['currencyFormats']['moneyWithCurrencyInEmailsFormat'],
+                'checkout_api_supported'               => $shopDetails['checkoutApiSupported'],
             ]
         );
 
@@ -118,24 +142,44 @@ class InstallShop
     /**
      * Get the Shopify shop details
      *
-     * @param  mixed  $accessToken
      * @return mixed
      *
      * @throws ConnectionException
      */
-    public function getShopDetails($accessToken)
+    public function getShopDetails()
     {
-        $shopDomain = $this->shopService->getShopDomain($this->request);
+        $query = <<<'QUERY'
+            query {
+                shop {
+                    name
+                    email
+                    shopOwnerName
+                    currencyCode
+                    timezoneAbbreviation
+                    ianaTimezone
+                    primaryDomain {
+                        host
+                    }
+                    plan {
+                        displayName
+                        partnerDevelopment
+                        shopifyPlus
+                    }
+                    currencyFormats {
+                        moneyFormat
+                        moneyInEmailsFormat
+                        moneyWithCurrencyFormat
+                        moneyWithCurrencyInEmailsFormat
+                    }
+                    checkoutApiSupported
+                }
+            }
+        QUERY;
 
-        $endpoint = "https://$shopDomain/admin/api/2024-10/shop.json";
+        $response = $this->graphQlClient->query($query);
 
-        $response = Http::withHeaders([
-            'X-Shopify-Access-Token' => $accessToken,
-        ])->get($endpoint);
-
-        if ($response->successful()) {
-            $shopDetails = $response->json();
-            return $shopDetails['shop'];
+        if ($response['errors'] === false && $response['status'] === 200) {
+            return $response['body']->container['data']['shop'];
         }
 
         return false;

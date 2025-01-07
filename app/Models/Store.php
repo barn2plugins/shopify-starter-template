@@ -17,10 +17,9 @@ class Store extends Model
     protected $fillable = [
         'name',
         'owner_name',
-        'plan',
         'plan_display_name',
         'is_partner_development',
-        'country_code',
+        'is_shopify_plus',
         'currency',
         'timezone',
         'iana_timezone',

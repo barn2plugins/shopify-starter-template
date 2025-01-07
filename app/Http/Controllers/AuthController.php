@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Actions\InstallShop;
 use App\Exceptions\MissingShopDomainException;
+use App\Services\ShopifyGraphQLService;
 use App\Services\ShopifyWebhookService;
 use App\Services\ShopService;
 use App\Utils\Util;
@@ -19,6 +20,13 @@ class AuthController extends Controller
      * @var \App\Services\ShopService
      */
     private $shopService;
+
+    /**
+     * Service to handle operations related to Shopify shops.
+     *
+     * @var \App\Services\ShopifyGraphQLService
+     */
+    private $graphQlClient;
 
     /**
      * Service to handle operations related to Shopify webhooks.
@@ -38,10 +46,12 @@ class AuthController extends Controller
      */
     public function __construct(
         ShopService $shopService,
-        ShopifyWebhookService $webhookService
+        ShopifyWebhookService $webhookService,
+        ShopifyGraphQLService $graphQlClient
     ) {
         $this->shopService    = $shopService;
         $this->webhookService = $webhookService;
+        $this->graphQlClient  = $graphQlClient;
     }
 
     public function authenticate(Request $request, InstallShop $installShop)
@@ -52,7 +62,7 @@ class AuthController extends Controller
         }
 
         // run action to install shop
-        $shop       = $installShop($request, $this->shopService);
+        $shop       = $installShop($request, $this->shopService, $this->graphQlClient);
         $shopDomain = $this->shopService->getShopDomain($request);
 
         if (! $shop) {

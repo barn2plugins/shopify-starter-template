@@ -16,10 +16,9 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('name')->nullable();
             $table->string('owner_name')->nullable();
-            $table->string('plan')->nullable();
             $table->string('plan_display_name')->nullable();
             $table->boolean('is_partner_development')->default(false);
-            $table->string('country_code')->nullable();
+            $table->boolean('is_shopify_plus')->default(false);
             $table->string('currency')->nullable();
             $table->string('timezone')->nullable();
             $table->string('iana_timezone')->nullable();
