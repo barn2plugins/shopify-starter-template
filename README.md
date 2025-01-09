@@ -13,7 +13,7 @@ npm install
 ```
 Build assets file
 ```sh
-npm run dev
+npm run build
 ```
 Copy .env file from .env.example
 ```sh
