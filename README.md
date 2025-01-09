@@ -53,7 +53,7 @@ SHOPIFY_APP_NAME='{the-app-name}'
 SHOPIFY_API_KEY=put-client-id
 SHOPIFY_API_SECRET=put-client-secret
 SHOPIFY_API_SCOPES=read_products,write_products,write_script_tags
-SHOPIFY_REDIRECT_URI='https://shopify-starter-template.test/authenticate'
+SHOPIFY_REDIRECT_URI='https://your-app-domain.test/authenticate'
 SESSION_SECURE_COOKIE=true
 SESSION_SAME_SITE="none"
 ```
