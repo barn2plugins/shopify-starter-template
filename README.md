@@ -3,37 +3,32 @@ This repository can be used as a template. Click the **'Use this template'** but
 
 Now from the app repository, clone the template into your local development area and cd into.
 
-Install composer
+1. Install composer
 ```sh
 composer install
 ```
-Install npm packages
+2. Install npm packages
 ```sh
 npm install
 ```
-Build assets file
+3. Build assets file
 ```sh
 npm run build
 ```
-Copy .env file from .env.example
+4. Copy .env file from .env.example
 ```sh
 cp .env.example .env
 ```
-Setup the below env variables
+5. Setup the below env variables
 ```sh
 APP_URL=https://your-app-url.test
-DB_CONNECTION=mariadb
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=shopify_starter_template
-DB_USERNAME=root
-DB_PASSWORD=password
+DB_CONNECTION=sqlite
 ```
-Now generate Laravel application key
+6. Now generate Laravel application key
 ```sh
 php artisan key:generate
 ```
-Once all are setup, run the migrations
+7. Once all are setup, run the migrations
 ```sh
 php artisan migrate
 ```
